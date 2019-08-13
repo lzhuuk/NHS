@@ -4,4 +4,6 @@ This platform is being launched as a demonstration of the successful collaborati
 
 We made it open source and willing to share with the community.
 Each piece of analysis presented here, has been implemented and configured in the Epic EHRS program. This also provides an opportunity for the students to experience the real issues with NHS data, culture and deployment of any EHRS program.
+
+Disclaimer: There is no real patient data involved in any analysis. 
 ##
