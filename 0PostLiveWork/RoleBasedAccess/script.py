@@ -98,36 +98,36 @@ def main():
     ]]
 
     summary = pd.Series([ \
-    'Input source files: ' + 'SER ({} rows), ESR ({} rows)'.format(len(df_SER_raw_whole), len(df_ESR_raw_whole)),
-    'Choose the subset of SER ({} rows): '.format(len(df_SER)) + 'from the selected provider types',
-    'Choose the subset of ESR ({} rows): '.format(len(df_ESR)) + '"Medical and Dental", "Students" in "Staff Group"',
+    'Input source files: ' + 'SER ({} rows), ESR ({} rows).'.format(len(df_SER_raw_whole), len(df_ESR_raw_whole)),
+    'Choose the subset of SER ({} rows): '.format(len(df_SER)) + 'from the selected provider types.',
+    'Choose the subset of ESR ({} rows): '.format(len(df_ESR)) + '"Medical and Dental", "Students" in "Staff Group".',
 
     'Remove SER rows (those provider names with empty "Rpt Grp One" ' \
     + '(i.e. Employee Number)) as shown in the tab SER_ToCheck ' \
     + '({} rows) ;remaining {} SER rows.'\
     .format(len(df_SER_toCheckEmNum), len(df_SER_remain)),
 
-    'Process "Employee Number" in ESR ("Rpt Grp One" in SER) by deleting digits after "-"',
+    'Process "Employee Number" in ESR ("Rpt Grp One" in SER) by deleting digits after "-".',
 
     'Remove duplicated rows (i.e. multiple rows with same Employee Number) as shown in two tabs: ' \
-    + 'SER_DUP ({} rows), ESR_DUP ({} rows)'.format(len(df_SER_dup), len(df_ESR_dup)),
+    + 'SER_DUP ({} rows), ESR_DUP ({} rows).'.format(len(df_SER_dup), len(df_ESR_dup)),
 
     'Match on the Key: SER ("Provider name", "External Name", "Rpt Grp One") '
     + ', ESR ("SER File Name", "SER External Name", "Employee Number").',
 
     'Join non-duplicated rows which results in three tabs: ' \
-    + 'IN_BOTH ({} rows), SER_ONLY ({} rows), ESR_ONLY ({} rows)'.format(len(res_both), len(res_SER),
+    + 'IN_BOTH ({} rows), SER_ONLY ({} rows), ESR_ONLY ({} rows).'.format(len(res_both), len(res_SER),
      len(res_ESR)),
 
     'Add "IfHasThisRegNumInSER" Column (to the tab IN_BOTH): ' \
-    + 'True ({}/{}={}% rows) if "Professional Registration Num" (ESR) in "MPI ID" (SER)'\
+    + 'True ({}/{}={}% rows) if "Professional Registration Num" (ESR) in "MPI ID" (SER).'\
     .format(len(res_both_HasRegNum), len(res_both), round(100*len(res_both_HasRegNum)/len(res_both),2) ),
 
     'Add "TemplateGene" Column (to the tab IN_BOTH): ' \
-    + 'generated from the ESR info based on the getTemplateIndirect() method in TemplateTools.',
+    + 'generated from the ESR info based on the getTemplateIndirect() method in TemplateTools.py.',
 
     'Add "IsSameTemplate" Column (to the tab IN_BOTH): ' \
-    + 'True ({}/{}={}% rows) if "TemplateGene" (ESR) is same with "Rpt Grp Six" (SER)'\
+    + 'True ({}/{}={}% rows) if "TemplateGene" (ESR) is same with "Rpt Grp Six" (SER).'\
     .format(len(res_both_HasSameTemplate), len(res_both), round(100*len(res_both_HasSameTemplate)/len(res_both),2) ),
     ])
 
