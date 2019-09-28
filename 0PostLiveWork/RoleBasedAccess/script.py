@@ -19,7 +19,7 @@ def main():
     df_SER_raw = df_SER_raw_whole[df_SER_raw_whole['Provider type'].isin(list_ESR_providerType_selected)]
     df_ESR_raw = df_ESR_raw_whole[df_ESR_raw_whole['Staff Group'].isin(['Medical and Dental', 'Students'])]
 
-    columnNames_SER = ['Provider name', 'External Name', 'Sex', \
+    columnNames_SER = ['ID', 'Provider name', 'External Name', 'Sex', \
     'Rpt Grp One', 'Provider type', 'Provider specialty', \
     'Rpt Grp Six', 'MPI ID-Type', 'MPI ID']
     columnNames_ESR = ['SER File Name', 'SER External Name', 'Gender', \
@@ -70,7 +70,7 @@ def main():
     str(row['TemplateGene']) == str(row['Rpt Grp Six']), axis=1)
 
     res_both = res_both[[
-    'Provider name', 'External Name', 'Sex', \
+    'ID', 'Provider name', 'External Name', 'Sex', \
     'Provider type', 'Provider specialty', \
     'Rpt Grp One', 'MPI ID-Type', 'MPI ID', \
     'Rpt Grp Six', 'TemplateGene', 'IsSameTemplate', \
