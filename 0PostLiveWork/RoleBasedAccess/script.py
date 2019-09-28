@@ -11,6 +11,12 @@ def main():
     df_SER_raw_whole = pd.read_excel('sources/SER20190809.xlsx', sheet_name='SER export', header=[4])
     df_ESR_raw_whole = pd.read_excel('sources/Data Source 1- Main.xlsx', sheet_name='Data', header=[0])
 
+    df_ESR_providerType_selected = pd.read_excel(\
+    'sources/Provider Type SER - selected.xlsx', sheet_name='Sheet1', header=[0])
+    list_ESR_providerType_selected = \
+    df_ESR_providerType_selected["Selected Provider Type"].tolist()
+
+    df_SER_raw = df_SER_raw_whole[df_SER_raw_whole['Provider type'].isin(list_ESR_providerType_selected)]
     df_ESR_raw = df_ESR_raw_whole[df_ESR_raw_whole['Staff Group'].isin(['Medical and Dental', 'Students'])]
 
     columnNames_SER = ['Provider name', 'External Name', 'Sex', \
@@ -21,7 +27,7 @@ def main():
     'Org L2', 'Org L3', 'Org L4', 'Org L5', \
     'Professional Registration Num']
 
-    df_SER = df_SER_raw_whole[columnNames_SER]
+    df_SER = df_SER_raw[columnNames_SER]
     df_ESR = df_ESR_raw[columnNames_ESR]
 
     df_SER['Rpt Grp One'] = df_SER['Rpt Grp One'].apply(cleanID)
