@@ -46,8 +46,15 @@ def main():
     df_ESR_dup = df_ESR[dupIndicated]
     df_ESR = df_ESR[~dupIndicated]
 
+    df_SER_remain['Key'] = df_SER_remain.apply(lambda row: \
+    (row['Provider name'], row['External Name'], row['Rpt Grp One']), axis=1)
+
+    df_ESR['Key'] = df_ESR.apply(lambda row: \
+    (row['SER File Name'], row['SER External Name'], row['Employee Number']), axis=1)
+
     res = pd.merge(df_SER_remain, df_ESR, \
-    left_on=['Rpt Grp One'], right_on=['Employee Number'], \
+    # left_on=['Rpt Grp One'], right_on=['Employee Number'], \
+    on='Key',
     how='outer', indicator=True, validate='one_to_one')
 
     res_both = res[res['_merge'].isin(['both'])]
@@ -81,7 +88,8 @@ def main():
     'Provider type', 'Provider specialty', \
     'Rpt Grp One', 'MPI ID-Type', 'MPI ID', \
     'Rpt Grp Six', 'TemplateGene', 'IsSameTemplate', \
-    'SER File Name', 'SER External Name', 'Gender',
+    'Key', \
+    'SER File Name', 'SER External Name', 'Gender', \
     'Position Title', 'Role', 'Area Of Work', \
     'Org L2', 'Org L3', 'Org L4', 'Org L5', \
     'Assignment No.', 'Employee Number', 'Professional Registration Num', \
@@ -93,15 +101,18 @@ def main():
     'Choose the subset of SER ({} entires): '.format(len(df_SER)) + 'from the selected provider types',
     'Choose the subset of ESR ({} entires): '.format(len(df_ESR)) + '"Medical and Dental", "Students" in "Staff Group"',
 
-    '''Remove SER entries (those provider names with empty "Rpt Grp One"
-    (i.e. Employee Number)) as shown in the tab SER_ToCheck ({} entires);
-    remaining {} SER entires.'''.format(len(df_SER_toCheckEmNum), len(df_SER_remain)),
+    'Remove SER entries (those provider names with empty "Rpt Grp One" ' \
+    + '(i.e. Employee Number)) as shown in the tab SER_ToCheck ' \
+    + '({} entires) ;remaining {} SER entires.'\
+    .format(len(df_SER_toCheckEmNum), len(df_SER_remain)),
 
-    'Match on the key "Employee Number" (deleted digits after "-"): ' \
-    + '"Rpt Grp One" (in SER), "Employee Number" (in ESR)',
+    'Process "Employee Number" in ESR ("Rpt Grp One" in SER) by deleting digits after "-"',
 
-    'Remove duplicated entries (i.e. same key multiple entries) as shown in two tabs: ' \
+    'Remove duplicated entries (i.e. multiple entries with same Employee Number) as shown in two tabs: ' \
     + 'SER_DUP ({} entires), ESR_DUP ({} entires)'.format(len(df_SER_dup), len(df_ESR_dup)),
+
+    'Match on the Key: SER ("Provider name", "External Name", "Rpt Grp One") '
+    + ', ESR ("SER File Name", "SER External Name", "Employee Number").',
 
     'Join non-duplicated entries which results in three tabs: ' \
     + 'IN_BOTH ({} entires), SER_ONLY ({} entires), ESR_ONLY ({} entires)'.format(len(res_both), len(res_SER),
