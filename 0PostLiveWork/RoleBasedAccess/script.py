@@ -8,10 +8,10 @@ def main():
     current_path = os.path.abspath(__file__)
     os.chdir(os.path.dirname(current_path))
 
-    df = pd.read_excel('sources/SER20190809.xlsx', sheet_name='SER export', header=[4])
-    df2 = pd.read_excel('sources/Data Source 1- Main.xlsx', sheet_name='Data', header=[0])
+    df_SER_raw_whole = pd.read_excel('sources/SER20190809.xlsx', sheet_name='SER export', header=[4])
+    df_ESR_raw_whole = pd.read_excel('sources/Data Source 1- Main.xlsx', sheet_name='Data', header=[0])
 
-    df3 = df2[df2['Staff Group'].isin(['Medical and Dental', 'Students'])]
+    df_ESR_raw = df_ESR_raw_whole[df_ESR_raw_whole['Staff Group'].isin(['Medical and Dental', 'Students'])]
 
     columnNames_SER = ['Provider name', 'External Name', 'Sex', \
     'Rpt Grp One', 'Provider type', 'Provider specialty', \
@@ -21,8 +21,8 @@ def main():
     'Org L2', 'Org L3', 'Org L4', 'Org L5', \
     'Professional Registration Num']
 
-    df_SER = df[columnNames_SER]
-    df_ESR = df3[columnNames_ESR]
+    df_SER = df_SER_raw_whole[columnNames_SER]
+    df_ESR = df_ESR_raw[columnNames_ESR]
 
     df_SER['Rpt Grp One'] = df_SER['Rpt Grp One'].apply(cleanID)
     df_ESR['Employee Number'] = df_ESR['Employee Number'].apply(cleanID)
