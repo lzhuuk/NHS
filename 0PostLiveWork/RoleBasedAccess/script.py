@@ -33,15 +33,20 @@ def main():
     df_SER['Rpt Grp One'] = df_SER['Rpt Grp One'].apply(cleanID)
     df_ESR['Employee Number'] = df_ESR['Employee Number'].apply(cleanID)
 
-    dupIndicated = df_SER.duplicated('Rpt Grp One', keep=False)
-    df_SER_dup = df_SER[dupIndicated]
-    df_SER = df_SER[~dupIndicated]
+    df_SER_providerName_toCheckEmNum = df_SER.loc[pd.isna(df_SER['Rpt Grp One']), 'Provider name']
+    list_SER_providerName_toCheckEmNum = df_SER_providerName_toCheckEmNum.drop_duplicates().tolist()
+    df_SER_toCheckEmNum = df_SER[df_SER['Provider name'].isin(list_SER_providerName_toCheckEmNum)]
+    df_SER_remain = df_SER[~df_SER['Provider name'].isin(list_SER_providerName_toCheckEmNum)]
+
+    dupIndicated = df_SER_remain.duplicated('Rpt Grp One', keep=False)
+    df_SER_dup = df_SER_remain[dupIndicated]
+    df_SER_remain = df_SER_remain[~dupIndicated]
 
     dupIndicated = df_ESR.duplicated('Employee Number', keep=False)
     df_ESR_dup = df_ESR[dupIndicated]
     df_ESR = df_ESR[~dupIndicated]
 
-    res = pd.merge(df_SER, df_ESR, \
+    res = pd.merge(df_SER_remain, df_ESR, \
     left_on=['Rpt Grp One'], right_on=['Employee Number'], \
     how='outer', indicator=True, validate='one_to_one')
 
@@ -87,7 +92,13 @@ def main():
     'Input source files: ' + 'SER ({} entires), ESR ({} entires)'.format(len(df_SER_raw_whole), len(df_ESR_raw_whole)),
     'Choose the subset of SER ({} entires): '.format(len(df_SER)) + 'from the selected provider types',
     'Choose the subset of ESR ({} entires): '.format(len(df_ESR)) + '"Medical and Dental", "Students" in "Staff Group"',
-    'Match on the key "Employee Number" (deleted digits after "-"): ' + '"Rpt Grp One" (in SER), "Employee Number" (in ESR)',
+
+    '''Remove SER entries (those provider names with empty "Rpt Grp One"
+    (i.e. Employee Number)) as shown in the tab SER_ToCheck ({} entires);
+    remaining {} SER entires.'''.format(len(df_SER_toCheckEmNum), len(df_SER_remain)),
+
+    'Match on the key "Employee Number" (deleted digits after "-"): ' \
+    + '"Rpt Grp One" (in SER), "Employee Number" (in ESR)',
 
     'Remove duplicated entries (i.e. same key multiple entries) as shown in two tabs: ' \
     + 'SER_DUP ({} entires), ESR_DUP ({} entires)'.format(len(df_SER_dup), len(df_ESR_dup)),
@@ -116,6 +127,7 @@ def main():
         res_ESR.to_excel(writer, sheet_name='ESR_ONLY')
         df_SER_dup.to_excel(writer, sheet_name='SER_DUP')
         df_ESR_dup.to_excel(writer, sheet_name='ESR_DUP')
+        df_SER_toCheckEmNum.to_excel(writer, sheet_name='SER_ToCheck')
         summary.to_excel(writer, sheet_name='SUMMARY')
 
 
