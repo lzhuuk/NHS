@@ -69,6 +69,8 @@ def main():
     res_both['IsSameTemplate'] = res_both.apply(lambda row: \
     str(row['TemplateGene']) == str(row['Rpt Grp Six']), axis=1)
 
+    res_both_HasSameTemplate = res_both[res_both['IsSameTemplate'].isin([True])]
+
     res_both = res_both[[
     'ID', 'Provider name', 'External Name', 'Sex', \
     'Provider type', 'Provider specialty', \
@@ -86,13 +88,24 @@ def main():
     'Choose the subset of SER ({} entires): '.format(len(df_SER)) + 'from the selected provider types',
     'Choose the subset of ESR ({} entires): '.format(len(df_ESR)) + '"Medical and Dental", "Students" in "Staff Group"',
     'Match on the key "Employee Number" (deleted digits after "-"): ' + '"Rpt Grp One" (in SER), "Employee Number" (in ESR)',
+
     'Remove duplicated entries (i.e. same key multiple entries) as shown in two tabs: ' \
     + 'SER_DUP ({} entires), ESR_DUP ({} entires)'.format(len(df_SER_dup), len(df_ESR_dup)),
+
     'Join non-duplicated entries which results in three tabs: ' \
-    + 'IN_BOTH ({} entires), SER_ONLY ({} entires), ESR_ONLY ({} entires)'.format(len(res_both), len(res_SER), len(res_ESR)),
+    + 'IN_BOTH ({} entires), SER_ONLY ({} entires), ESR_ONLY ({} entires)'.format(len(res_both), len(res_SER),
+     len(res_ESR)),
+
     'Add "IfHasThisRegNumInSER" Column (to the tab IN_BOTH): ' \
     + 'True ({}/{}={}% entires) if "Professional Registration Num" (ESR) in "MPI ID" (SER)'\
     .format(len(res_both_HasRegNum), len(res_both), round(100*len(res_both_HasRegNum)/len(res_both),2) ),
+
+    'Add "TemplateGene" Column (to the tab IN_BOTH): ' \
+    + 'generated from the ESR info based on the getTemplateIndirect() method in TemplateTools.',
+
+    'Add "IsSameTemplate" Column (to the tab IN_BOTH): ' \
+    + 'True ({}/{}={}% entires) if "TemplateGene" (ESR) is same with "Rpt Grp Six" (SER)'\
+    .format(len(res_both_HasSameTemplate), len(res_both), round(100*len(res_both_HasSameTemplate)/len(res_both),2) ),
     ])
 
     summary.name = 'Analysis Process'
