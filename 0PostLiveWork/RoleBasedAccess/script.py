@@ -82,8 +82,9 @@ def main():
     ]]
 
     summary = pd.Series([ \
-    'Input source files: ' + 'SER ({} entires), ESR ({} entires)'.format(len(df), len(df2)),
-    'Choose the subset of ESR ({} entires): '.format(len(df3)) + '"Medical and Dental", "Students" in "Staff Group"',
+    'Input source files: ' + 'SER ({} entires), ESR ({} entires)'.format(len(df_SER_raw_whole), len(df_ESR_raw_whole)),
+    'Choose the subset of SER ({} entires): '.format(len(df_SER)) + 'from the selected provider types',
+    'Choose the subset of ESR ({} entires): '.format(len(df_ESR)) + '"Medical and Dental", "Students" in "Staff Group"',
     'Match on the key "Employee Number" (deleted digits after "-"): ' + '"Rpt Grp One" (in SER), "Employee Number" (in ESR)',
     'Remove duplicated entries (i.e. same key multiple entries) as shown in two tabs: ' \
     + 'SER_DUP ({} entires), ESR_DUP ({} entires)'.format(len(df_SER_dup), len(df_ESR_dup)),
