@@ -37,6 +37,7 @@ def main():
     list_SER_providerName_toCheckEmNum = df_SER_providerName_toCheckEmNum.drop_duplicates().tolist()
     df_SER_toCheckEmNum = df_SER[df_SER['Provider name'].isin(list_SER_providerName_toCheckEmNum)]
     df_SER_remain = df_SER[~df_SER['Provider name'].isin(list_SER_providerName_toCheckEmNum)]
+    df_SER_toCheckEmNum = df_SER_toCheckEmNum.sort_values(by='Provider name')
 
     dupIndicated = df_SER_remain.duplicated('Rpt Grp One', keep=False)
     df_SER_dup = df_SER_remain[dupIndicated]
