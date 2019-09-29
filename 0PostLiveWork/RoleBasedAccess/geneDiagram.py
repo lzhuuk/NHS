@@ -8,8 +8,8 @@ import os
 current_path = os.path.abspath(__file__)
 os.chdir(os.path.dirname(current_path))
 
-# dot = Digraph(comment='The Test Diagram', format="png")
-dot = Digraph(comment='The Test Diagram')
+# dot = Digraph(comment='The Flowchart Diagram', format="png")
+dot = Digraph(comment='The Flowchart Diagram')
 
 # dot.node('0', 'START')
 
@@ -124,4 +124,4 @@ dot.edge('h', 'i', 'N')
 # dot.view()
 # print(dot.source)
 
-dot.render('diagram.gv', view=True)
+dot.render('results/TemplateCheckFlowchart-v1.0.gv', view=True)
