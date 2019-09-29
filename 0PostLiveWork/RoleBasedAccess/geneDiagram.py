@@ -3,6 +3,10 @@
 # Version 1.0
 
 from graphviz import Digraph
+import os
+
+current_path = os.path.abspath(__file__)
+os.chdir(os.path.dirname(current_path))
 
 # dot = Digraph(comment='The Test Diagram', format="png")
 dot = Digraph(comment='The Test Diagram')
