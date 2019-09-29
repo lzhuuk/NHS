@@ -1,7 +1,6 @@
 # Generating flowchart diagram
 # for getTemplateIndirect() in TemplateTools.py
 # Version 1.0
-# Updated 20190928
 
 from graphviz import Digraph
 
