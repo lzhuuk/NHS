@@ -5,13 +5,14 @@
 
 import re
 
-def getTemplateIndirect(infoString, infoStringAdd):
+def getTemplateIndirect(infoString, infoStringAdd=''):
     template = ''
 
     if infoString == '':
         return template
 
-    # infoString = infoString + ' ' + infoStringAdd
+    if infoStringAdd != '':
+        infoString = infoString + ' ' + infoStringAdd
 
     if re.search('Medical Student', infoString, re.I):
         if re.search('Cardiology', infoString, re.I):

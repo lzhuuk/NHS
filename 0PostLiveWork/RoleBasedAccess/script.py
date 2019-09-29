@@ -76,7 +76,7 @@ def main():
     TT.getTemplateIndirect( \
     str(row['Position Title']) + ' ' + \
     str(row['Role']) + ' ' + str(row['Area Of Work']) \
-    , str(row['Org L5'])
+    # , str(row['Org L5'])
     ), axis=1)
 
     res_both['IsSameTemplate'] = res_both.apply(lambda row: \
@@ -124,7 +124,7 @@ def main():
     .format(len(res_both_HasRegNum), len(res_both), round(100*len(res_both_HasRegNum)/len(res_both),2) ),
 
     'Add "TemplateGene" Column (to the tab IN_BOTH): ' \
-    + 'generated from the ESR info based on the getTemplateIndirect() method in TemplateTools.py.',
+    + 'generated template (by the logic version 1.0) from the ESR info ("Position Title", "Role", "Area Of Work").',
 
     'Add "IsSameTemplate" Column (to the tab IN_BOTH): ' \
     + 'True ({}/{}={}% rows) if "TemplateGene" (ESR) is same with "Rpt Grp Six" (SER).'\
