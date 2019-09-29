@@ -1,4 +1,7 @@
 
 *.csv
 *.bacpac
+*.pyc
 .DS_Store
+sources/
+results/
