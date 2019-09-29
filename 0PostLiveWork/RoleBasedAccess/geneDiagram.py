@@ -103,7 +103,8 @@ dot.edge('h5', 'h11', 'Y')
 dot.edge('h5', 'h12', 'N')
 
 dot.node('i', 'ELSE')
-
+dot.node('i1', '0NOT_KNOWN')
+dot.edge('i', 'i1')
 
 # dot.edges(['0a', '0b', '0c', '0d', '0e', '0f','0g', '0h', '0i',])
 

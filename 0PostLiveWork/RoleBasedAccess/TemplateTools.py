@@ -11,11 +11,6 @@ def getTemplateIndirect(infoString, infoStringAdd):
     if infoString == '':
         return template
 
-    if re.search('nurse|nursing', infoString, re.I) \
-    or re.search('midwife', infoString, re.I) \
-    or re.search('HCA', infoString):
-        return '0Leave'
-
     # infoString = infoString + ' ' + infoStringAdd
 
     if re.search('Medical Student', infoString, re.I):
@@ -81,10 +76,7 @@ def getTemplateIndirect(infoString, infoStringAdd):
             else:
                 template = 'Consultant (all types)'
 
-    elif re.search('Trust Grade Doctor|Clinical Assistant|Staff Grade', infoString, re.I):
-        template = '0NOT_KNOWN: RequireOtherInfo'
-
     else:
-        template = 'UNKNOWN_TYPE'
+        template = '0NOT_KNOWN'
 
     return template
