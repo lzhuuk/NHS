@@ -45,15 +45,15 @@ def main():
 
     dupIndicated = df_ESR.duplicated('Employee Number', keep=False)
     df_ESR_dup = df_ESR[dupIndicated]
-    df_ESR = df_ESR[~dupIndicated]
+    df_ESR_remain = df_ESR[~dupIndicated]
 
     df_SER_remain['Key'] = df_SER_remain.apply(lambda row: \
     (row['Provider name'], row['External Name'], row['Rpt Grp One']), axis=1)
 
-    df_ESR['Key'] = df_ESR.apply(lambda row: \
+    df_ESR_remain['Key'] = df_ESR_remain.apply(lambda row: \
     (row['SER File Name'], row['SER External Name'], row['Employee Number']), axis=1)
 
-    res = pd.merge(df_SER_remain, df_ESR, \
+    res = pd.merge(df_SER_remain, df_ESR_remain, \
     # left_on=['Rpt Grp One'], right_on=['Employee Number'], \
     on='Key',
     how='outer', indicator=True, validate='one_to_one')
