@@ -11,7 +11,7 @@ def main():
     os.chdir(os.path.dirname(current_path))
 
     df_data = pd.read_excel(\
-    'sources/Epic ED Diagnosis Comment Analysis.xlsx', \
+    'sources/Epic ED Diagnosis Comment Analysis - 04102019.xlsx', \
     sheet_name='comment', header=[0])
 
     # df_data['Diagnosis(Comments)'] = df_data['Diagnosis(Comments)'].apply(cutOffString)
@@ -45,8 +45,8 @@ def main():
 
     word_dist = nltk.FreqDist(words)
 
-    top_N = 100
-    rslt = pd.DataFrame(word_dist.most_common(top_N),\
+    # top_N = 100
+    rslt = pd.DataFrame(word_dist.most_common(),\
     columns=['Word', 'Frequency'])
     # print(rslt)
 
