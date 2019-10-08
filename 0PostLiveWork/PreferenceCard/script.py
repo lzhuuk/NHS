@@ -63,8 +63,8 @@ def main():
 
     # add manual review results
     excel3 = xlrd.open_workbook(\
-    'sources/Copy of Prefcard fuzzy match - AddingIDsWithDuplicationsV0-19092019-reviewOnly-LeileiAlexa-03102019 -noFillOnly.xlsx')
-    table4 = excel3.sheet_by_name('toReview')
+    'sources/review-LeileiAlexa-03102019 - noFillOnly - doublecheck-Leilei 08102019 - edited.xlsx')
+    table4 = excel3.sheet_by_name('Final')
     for i in range(1, table4.nrows):
         thisRow = table4.row_values(i)
         thisCardId = thisRow[0].replace('M-','')
