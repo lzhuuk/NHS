@@ -1,3 +1,19 @@
+'''
+This is a script for selecting processing cancer super grouper file.
+The objective is to only keep one IMO term for each SNOMED concept.
+As a result, 5111 rows are selected from 48557 rows (the one with "Keep" flag).
+
+Important Note:
+The excel spreadsheet MUST be preprocessed before reading into this scripts.
+This preprocessing includes:
+1. Removing the inactive rows (i.e. EC_INACTIVE_YN is Y);
+2. Sorting by CONCEPT_ID (either ascending or descending) with first priority,
+and then RECORD_TYPE (must be descending order so that the "TERM" type appears
+before the type "BOTH CODE AND TERM") with second priority.
+3. Selecting only the rows where CONCEPT_LINE is 1, so that there is no multiple
+mapping from a certain IMO term to different SNOMED concepts.
+'''
+
 import xlrd, xlwt
 import os, sys
 import re
@@ -18,6 +34,8 @@ def main():
     nameListIMO = table1.col_values(2)[1:]
 
 
+    # build a dictionary called dict
+    # key is SNOMED ID, value is SNOMED NAME
     dict = collections.OrderedDict()
     for nameSNOMED, idSNOMED_RAW in zip(nameListSNOMED, idListSNOMED_RAW):
         idSNOMED = idSNOMED_RAW.replace('SNOMED#','').strip()
@@ -26,6 +44,8 @@ def main():
         elif dict[idSNOMED] != nameSNOMED:
             sys.exit(0)
 
+    # build a dictionary called dict2
+    # key is SNOMED ID, value is a list of related IMO NAMES
     dict2 = collections.OrderedDict()
     for idSNOMED_RAW, nameIMO in zip(idListSNOMED_RAW, nameListIMO):
         idSNOMED = idSNOMED_RAW.replace('SNOMED#','').strip()
@@ -33,11 +53,13 @@ def main():
             dict2[idSNOMED] = []
         dict2[idSNOMED].append(nameIMO)
 
+    # comparing each SNOMED NAME with its related IMO NAMES
     resultsList = []
     for idSNOMED, nameSublistIMO in dict2.items():
         nameSNOMED = dict[idSNOMED]
         thisResults = []
         for nameIMO in nameSublistIMO:
+            # logic of calculating likehood ratio
             tempLikehood, tempWord = compute_likehood(nameSNOMED, nameIMO)
             if nameIMO == nameSNOMED:
                 tempLikehood = 1.1
@@ -46,9 +68,11 @@ def main():
             thisResults.append((tempLikehood,nameIMO))
         resultsList.append(thisResults)
 
+    # generate a list of flag for selecting rows in Excel file
     flagList = []
     ratioList = []
     for thisResults in resultsList:
+        # logic of giving a flag
         thisMax = max([elem[0] for elem in thisResults])
         foundOne = False
         for thisTuple in thisResults:
@@ -61,7 +85,6 @@ def main():
                     thisFlag = 'Check'
             flagList.append(thisFlag)
             ratioList.append(thisTuple[0])
-
 
 
     #opening a new excel to save results
