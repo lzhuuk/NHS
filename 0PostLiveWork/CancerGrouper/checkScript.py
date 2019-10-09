@@ -22,25 +22,27 @@ def main():
     print('Saving results...')
     workbook = xlwt.Workbook(encoding = 'utf-8')
     worksheet = workbook.add_sheet('output_file')
-    worksheet.write(0, 0, 'Term')
+    worksheet.write(0, 0, 'Flag')
 
-    rowCount = 1
-    for name in nameListIMO:
+    for i, name in enumerate(nameListIMO):
         # logic of laterality checking
+        thisPass = True
         if re.search('left', name, re.I):
             if re.sub('left', 'right', name) in nameListIMO:
                 pass
             else:
-                print(name)
-                worksheet.write(rowCount, 0, name)
-                rowCount += 1
-        elif re.search('right', name, re.I):
+                thisPass = False
+        if re.search('right', name, re.I):
             if re.sub('right', 'left', name) in nameListIMO:
                 pass
             else:
-                print(name)
-                worksheet.write(rowCount, 0, name)
-                rowCount += 1
+                thisPass = False
+
+        flag = ''
+        if thisPass == False:
+             flag = 'check'
+             print(name)
+        worksheet.write(i+1, 0, flag)
 
     workbook.save('results/Excel_test.xls')
 
