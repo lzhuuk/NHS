@@ -13,23 +13,7 @@ def saveResults(procedureIdListPure, willAddChildren):
     cardIdListEpic = table1.col_values(0)[5:]
     cardIdListEpic = [id.replace('M-','') for id in cardIdListEpic]
 
-
-    if willAddChildren == True:
-        rawData, rawData2 = connect_sql()
-        global dict_SID_DID
-        dict_SID_DID = get_dict_SID_DID(rawData)
-        # dict_CID_PRE = get_dict_CID_PRE(rawData2) # don't need preferred name
-
-        newProcIdsListWithChildren = []
-        for i, idList in enumerate(procedureIdListPure):
-            if idList != []:
-                childernIdList = getAllChildrenFromIdList(idList)
-                childernIdList = [id for id in childernIdList if id in dict_ID_TERM.keys()]
-                idList = idList + childernIdList
-            newProcIdsListWithChildren.append(idList)
-            procedureIdListPure = newProcIdsListWithChildren
-
-
+    #
     dict_Triple_cardId = {}
     for surgeon, location, idList, cardId \
     in zip(surgeonListEpic, locationListEpic, procedureIdListPure, cardIdListEpic):
@@ -40,9 +24,78 @@ def saveResults(procedureIdListPure, willAddChildren):
             else:
                 dict_Triple_cardId[thisKey] = 'dup'
 
-    # dup_list = [k for k,v in dict_Triple_cardId.items() if v == 'dup']
-    # print(dup_list)
+    dup_list = [k for k,v in dict_Triple_cardId.items() if v == 'dup']
+    print(dup_list)
+    #
 
+    if willAddChildren == True:
+        rawData, rawData2 = connect_sql()
+        global dict_SID_DID
+        dict_SID_DID = get_dict_SID_DID(rawData)
+        # dict_CID_PRE = get_dict_CID_PRE(rawData2) # don't need preferred name
+
+        dict_Triple_Childern = {}
+        for surgeon, location, idList \
+        in zip(surgeonListEpic, locationListEpic, procedureIdListPure):
+            if idList != []:
+                for id in idList:
+                    thisKey = (surgeon, location, id)
+                    if dict_Triple_Childern.get(thisKey) == None:
+                        rawChildernIdList = getAllChildrenFromIdList([id])
+                        dict_Triple_Childern[thisKey] \
+                        = [id for id in rawChildernIdList if id in dict_ID_TERM.keys()]
+                    else:
+                        # print(dict_Triple_Childern[thisKey])
+                        sys.exit('Note Duplications')
+
+        toInsertChildren = [(k,len(v)) for k,v \
+        in dict_Triple_Childern.items() if len(v) > 0]
+        toInsertChildren.sort(key=lambda temp: temp[1], reverse=False)
+
+        # build mapping from index to cardId
+        dict_cardId_index = {}
+        for i, cardId in enumerate(cardIdListEpic):
+            if dict_cardId_index.get(cardId) != None:
+                sys.exit('KEY CONFLICT @ cardIdListEpic')
+            dict_cardId_index[cardId] = i
+
+        dict_Pair_IdList = {}
+        for surgeon, location, idList \
+        in zip(surgeonListEpic, locationListEpic, procedureIdListPure):
+            thisKey = (surgeon, location)
+            if dict_Pair_IdList.get(thisKey) == None:
+                dict_Pair_IdList[thisKey] = []
+            dict_Pair_IdList[thisKey] += idList
+
+
+        for item in toInsertChildren:
+            thisKey = item[0]
+            thisCardId = dict_Triple_cardId[thisKey]
+            thisIndex = dict_cardId_index[thisCardId]
+            thisChildren = dict_Triple_Childern[thisKey]
+            thisSergeon = thisKey[0]
+            thisLocation = thisKey[1]
+            thisPair = (thisSergeon,thisLocation)
+
+            for id in thisChildren:
+                if id not in dict_Pair_IdList.get(thisPair):
+                    dict_Pair_IdList[thisPair].append(id)
+                    procedureIdListPure[thisIndex].append(id)
+
+    #
+    dict_Triple_cardId = {}
+    for surgeon, location, idList, cardId \
+    in zip(surgeonListEpic, locationListEpic, procedureIdListPure, cardIdListEpic):
+        for id in idList:
+            thisKey = (surgeon, location, id)
+            if dict_Triple_cardId.get(thisKey) == None:
+                dict_Triple_cardId[thisKey] = cardId
+            else:
+                dict_Triple_cardId[thisKey] = 'dup'
+
+    dup_list = [k for k,v in dict_Triple_cardId.items() if v == 'dup']
+    print(dup_list)
+    #
 
     print('Saving results...')
     workbook = xlwt.Workbook(encoding = 'utf-8')
@@ -66,11 +119,8 @@ def saveResults(procedureIdListPure, willAddChildren):
             dupIdList = []
             for id in idList:
                 thisKey = (surgeonListEpic[i], locationListEpic[i], id)
-                try:
-                    if dict_Triple_cardId[thisKey] == 'dup':
-                        dupIdList.append(id)
-                except Exception as e:
-                    sys.exit(e)
+                if dict_Triple_cardId[thisKey] == 'dup':
+                    dupIdList.append(id)
 
             dupNameList = [dict_ID_TERM.get(id,[''])[-1] for id in dupIdList]
 
