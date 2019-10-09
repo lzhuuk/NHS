@@ -1,3 +1,8 @@
+'''
+This is a script for checking the laterality in the resulted file.
+It outputs terms which may not have corresponding left/right term.
+'''
+
 import xlrd, xlwt
 import os, sys
 import re
@@ -14,7 +19,6 @@ def main():
     table1 = excel1.sheet_by_name(u'data')
     nameListIMO = table1.col_values(2)[1:]
 
-
     print('Saving results...')
     workbook = xlwt.Workbook(encoding = 'utf-8')
     worksheet = workbook.add_sheet('output_file')
@@ -22,6 +26,7 @@ def main():
 
     rowCount = 1
     for name in nameListIMO:
+        # logic of laterality checking
         if re.search('left', name, re.I):
             if re.sub('left', 'right', name) in nameListIMO:
                 pass
