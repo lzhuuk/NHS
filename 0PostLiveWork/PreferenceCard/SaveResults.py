@@ -67,6 +67,8 @@ def saveResults(procedureIdListPure, willAddChildren):
                 dict_Pair_IdList[thisKey] = []
             dict_Pair_IdList[thisKey] += idList
 
+        procedureIdListWithoutChildren = \
+        [idList.copy() for idList in procedureIdListPure]
 
         for item in toInsertChildren:
             thisKey = item[0]
@@ -81,6 +83,11 @@ def saveResults(procedureIdListPure, willAddChildren):
                 if id not in dict_Pair_IdList.get(thisPair):
                     dict_Pair_IdList[thisPair].append(id)
                     procedureIdListPure[thisIndex].append(id)
+
+        addedChildrenList = []
+        for idList1, idList2 in zip(procedureIdListPure, procedureIdListWithoutChildren):
+            thisAddedChildren = list(set(idList1).difference(set(idList2)))
+            addedChildrenList.append(thisAddedChildren)
 
     #
     dict_Triple_cardId = {}
@@ -97,6 +104,7 @@ def saveResults(procedureIdListPure, willAddChildren):
     print(dup_list)
     #
 
+
     print('Saving results...')
     workbook = xlwt.Workbook(encoding = 'utf-8')
     worksheet = workbook.add_sheet('output_file')
@@ -111,6 +119,7 @@ def saveResults(procedureIdListPure, willAddChildren):
     worksheet2.write(0, 1, 'Procedure Name')
     worksheet2.write(0, 2, 'Any Not Shown?')
     worksheet2.write(0, 3, 'Any Duplication?')
+    worksheet2.write(0, 4, 'Added Children')
 
     rowCount = 1
     for i, idList in enumerate(procedureIdListPure):
@@ -146,6 +155,10 @@ def saveResults(procedureIdListPure, willAddChildren):
                 # dupIdList = dupIdList[:20]
                 # dupIdList.append(tempMsg)
             worksheet2.write(i+1, 3, '\n'.join(dupIdList).strip())
+
+            if willAddChildren == True:
+                worksheet2.write(i+1, 4, \
+                '\n'.join(addedChildrenList[i]).strip())
 
 
     workbook.save('results/Excel_test.xls')
