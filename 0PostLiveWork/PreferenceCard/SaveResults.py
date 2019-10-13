@@ -157,8 +157,27 @@ def saveResults(procedureIdListPure, willAddChildren):
             worksheet2.write(i+1, 3, '\n'.join(dupIdList).strip())
 
             if willAddChildren == True:
+
+                nameListOfOrigin = [dict_ID_TERM.get(id,[''])[-1] \
+                for id in procedureIdListWithoutChildren[i]]
+                nameListOfChildren = [dict_ID_TERM.get(id,[''])[-1] \
+                for id in addedChildrenList[i]]
+
                 worksheet2.write(i+1, 4, \
+                '\n'.join(procedureIdListWithoutChildren[i]).strip())
+                if len(nameListOfOrigin) > 20:
+                    tempMsg = 'Only 20' + '/' + str(len(nameListOfOrigin)) + ' shown due to space limit.'
+                    nameListOfOrigin = nameListOfOrigin[:20]
+                    nameListOfOrigin.append(tempMsg)
+                worksheet2.write(i+1, 5, \
+                '\n'.join(nameListOfOrigin).strip())
+
+                worksheet2.write(i+1, 6, \
                 '\n'.join(addedChildrenList[i]).strip())
+                if len(nameListOfChildren) > 20:
+                    nameListOfChildren = nameListOfChildren[:20]
+                worksheet2.write(i+1, 7, \
+                '\n'.join(nameListOfChildren).strip())
 
 
     workbook.save('results/Excel_test.xls')
