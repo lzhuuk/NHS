@@ -119,7 +119,10 @@ def saveResults(procedureIdListPure, willAddChildren):
     worksheet2.write(0, 1, 'Procedure Name')
     worksheet2.write(0, 2, 'Any Not Shown?')
     worksheet2.write(0, 3, 'Any Duplication?')
-    worksheet2.write(0, 4, 'Added Children')
+    worksheet2.write(0, 4, 'Procedure ID (ExcludeChildren)')
+    worksheet2.write(0, 5, 'Procedure Name (ExcludeChildren)')
+    worksheet2.write(0, 6, 'Procedure ID (ChildrenToAdd)')
+    worksheet2.write(0, 7, 'Procedure Name (ChildrenToAdd)')
 
     rowCount = 1
     for i, idList in enumerate(procedureIdListPure):
