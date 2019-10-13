@@ -115,14 +115,18 @@ def saveResults(procedureIdListPure, willAddChildren):
     worksheet.write(0, 11, 'REVIEW TERM')
 
     worksheet2 = workbook.add_sheet('output_file2')
-    worksheet2.write(0, 0, 'Procedure ID')
-    worksheet2.write(0, 1, 'Procedure Name')
-    worksheet2.write(0, 2, 'Any Not Shown?')
-    worksheet2.write(0, 3, 'Any Duplication?')
-    worksheet2.write(0, 4, 'Procedure ID (ExcludeChildren)')
-    worksheet2.write(0, 5, 'Procedure Name (ExcludeChildren)')
-    worksheet2.write(0, 6, 'Procedure ID (ChildrenToAdd)')
-    worksheet2.write(0, 7, 'Procedure Name (ChildrenToAdd)')
+    thisRow = table1.row_values(4)
+    for j in range(10):
+        worksheet2.write(0, j, thisRow[j])
+    offsetWs2 = 10
+    worksheet2.write(0, offsetWs2+0, 'Procedure ID')
+    worksheet2.write(0, offsetWs2+1, 'Procedure Name')
+    worksheet2.write(0, offsetWs2+2, 'Any Not Shown?')
+    worksheet2.write(0, offsetWs2+3, 'Any Duplication?')
+    worksheet2.write(0, offsetWs2+4, 'Procedure ID (ExcludeChildren)')
+    worksheet2.write(0, offsetWs2+5, 'Procedure Name (ExcludeChildren)')
+    worksheet2.write(0, offsetWs2+6, 'Procedure ID (ChildrenToAdd)')
+    worksheet2.write(0, offsetWs2+7, 'Procedure Name (ChildrenToAdd)')
 
     rowCount = 1
     for i, idList in enumerate(procedureIdListPure):
@@ -144,20 +148,23 @@ def saveResults(procedureIdListPure, willAddChildren):
                 worksheet.write(rowCount, 11, dupName)
                 rowCount += 1
 
+            for j in range(10):
+                worksheet2.write(i+1, j, thisRow[j])
+
             nameList = [dict_ID_TERM.get(id,[''])[-1] for id in idList]
             if len(idList) > 20:
                 tempMsg = 'Only 20' + '/' + str(len(idList)) + ' shown due to space limit.'
                 # idList = idList[:20]
                 nameList = nameList[:20]
-                worksheet2.write(i+1, 2, tempMsg)
-            worksheet2.write(i+1, 0, '\n'.join(idList).strip())
-            worksheet2.write(i+1, 1, '\n'.join(nameList).strip())
+                worksheet2.write(i+1, offsetWs2+2, tempMsg)
+            worksheet2.write(i+1, offsetWs2+0, '\n'.join(idList).strip())
+            worksheet2.write(i+1, offsetWs2+1, '\n'.join(nameList).strip())
 
             if len(dupIdList) > 20:
                 tempMsg = 'Only 20' + '/' + str(len(dupIdList)) + ' shown due to space limit.'
                 # dupIdList = dupIdList[:20]
                 # dupIdList.append(tempMsg)
-            worksheet2.write(i+1, 3, '\n'.join(dupIdList).strip())
+            worksheet2.write(i+1, offsetWs2+3, '\n'.join(dupIdList).strip())
 
             if willAddChildren == True:
 
@@ -166,20 +173,20 @@ def saveResults(procedureIdListPure, willAddChildren):
                 nameListOfChildren = [dict_ID_TERM.get(id,[''])[-1] \
                 for id in addedChildrenList[i]]
 
-                worksheet2.write(i+1, 4, \
+                worksheet2.write(i+1, offsetWs2+4, \
                 '\n'.join(procedureIdListWithoutChildren[i]).strip())
                 if len(nameListOfOrigin) > 20:
                     tempMsg = 'Only 20' + '/' + str(len(nameListOfOrigin)) + ' shown due to space limit.'
                     nameListOfOrigin = nameListOfOrigin[:20]
                     nameListOfOrigin.append(tempMsg)
-                worksheet2.write(i+1, 5, \
+                worksheet2.write(i+1, offsetWs2+5, \
                 '\n'.join(nameListOfOrigin).strip())
 
-                worksheet2.write(i+1, 6, \
+                worksheet2.write(i+1, offsetWs2+6, \
                 '\n'.join(addedChildrenList[i]).strip())
                 if len(nameListOfChildren) > 20:
                     nameListOfChildren = nameListOfChildren[:20]
-                worksheet2.write(i+1, 7, \
+                worksheet2.write(i+1, offsetWs2+7, \
                 '\n'.join(nameListOfChildren).strip())
 
 
