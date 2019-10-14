@@ -48,8 +48,16 @@ def saveResults(procedureIdListPure, willAddChildren):
                         # print(dict_Triple_Childern[thisKey])
                         sys.exit('Note Duplications')
 
+        inactiveCardIds = [
+            '1', '40', '43', '45', '48', '49', '53', '57', '58', '63', '107',
+            '125', '127', '129', '131', '148', '156', '171', '236', '268',
+            '449', '804', '829', '1178', '1197', '1223', '1418', '2158', '3585'
+        ]
+
         toInsertChildren = [(k,len(v)) for k,v \
-        in dict_Triple_Childern.items() if len(v) > 0]
+        in dict_Triple_Childern.items() if len(v) > 0 \
+        and dict_Triple_cardId[k] not in inactiveCardIds]
+
         toInsertChildren.sort(key=lambda temp: temp[1], reverse=False)
 
         # build mapping from index to cardId
