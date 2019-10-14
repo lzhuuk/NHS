@@ -127,8 +127,10 @@ def saveResults(procedureIdListPure, willAddChildren):
     worksheet2.write(0, offsetWs2+5, 'Procedure Name (ExcludeChildren)')
     worksheet2.write(0, offsetWs2+6, 'Procedure ID (ChildrenToAdd)')
     worksheet2.write(0, offsetWs2+7, 'Procedure Name (ChildrenToAdd)')
+    worksheet2.write(0, offsetWs2+8, 'Card ID (ForAddingChildren)')
 
     rowCount = 1
+    rowCount2 = 1
     for i, idList in enumerate(procedureIdListPure):
         if idList != []:
 
@@ -149,45 +151,69 @@ def saveResults(procedureIdListPure, willAddChildren):
                 rowCount += 1
 
             for j in range(10):
-                worksheet2.write(i+1, j, thisRow[j])
+                worksheet2.write(rowCount2, j, thisRow[j])
 
             nameList = [dict_ID_TERM.get(id,[''])[-1] for id in idList]
             if len(idList) > 20:
                 tempMsg = 'Only 20' + '/' + str(len(idList)) + ' shown due to space limit.'
                 # idList = idList[:20]
                 nameList = nameList[:20]
-                worksheet2.write(i+1, offsetWs2+2, tempMsg)
-            worksheet2.write(i+1, offsetWs2+0, '\n'.join(idList).strip())
-            worksheet2.write(i+1, offsetWs2+1, '\n'.join(nameList).strip())
+                worksheet2.write(rowCount2, offsetWs2+2, tempMsg)
+            worksheet2.write(rowCount2, offsetWs2+0, '\n'.join(idList).strip())
+            worksheet2.write(rowCount2, offsetWs2+1, '\n'.join(nameList).strip())
 
             if len(dupIdList) > 20:
                 tempMsg = 'Only 20' + '/' + str(len(dupIdList)) + ' shown due to space limit.'
                 # dupIdList = dupIdList[:20]
                 # dupIdList.append(tempMsg)
-            worksheet2.write(i+1, offsetWs2+3, '\n'.join(dupIdList).strip())
+            worksheet2.write(rowCount2, offsetWs2+3, '\n'.join(dupIdList).strip())
 
-            if willAddChildren == True:
+            if willAddChildren == False:
 
-                nameListOfOrigin = [dict_ID_TERM.get(id,[''])[-1] \
-                for id in procedureIdListWithoutChildren[i]]
-                nameListOfChildren = [dict_ID_TERM.get(id,[''])[-1] \
-                for id in addedChildrenList[i]]
+                rowCount2 += 1
 
-                worksheet2.write(i+1, offsetWs2+4, \
-                '\n'.join(procedureIdListWithoutChildren[i]).strip())
+            else:
+
+                thisIdsExcludeChildren = procedureIdListWithoutChildren[i]
+                thisIdsOfChildren = addedChildrenList[i]
+
+                nameListOfOrigin = [dict_ID_TERM.get(id,[''])[-1] for\
+                 id in thisIdsExcludeChildren]
+                nameListOfChildren = [dict_ID_TERM.get(id,[''])[-1] for\
+                 id in thisIdsOfChildren]
+
+                worksheet2.write(rowCount2, offsetWs2+4, \
+                '\n'.join(thisIdsExcludeChildren).strip())
                 if len(nameListOfOrigin) > 20:
                     tempMsg = 'Only 20' + '/' + str(len(nameListOfOrigin)) + ' shown due to space limit.'
                     nameListOfOrigin = nameListOfOrigin[:20]
                     nameListOfOrigin.append(tempMsg)
-                worksheet2.write(i+1, offsetWs2+5, \
+                worksheet2.write(rowCount2, offsetWs2+5, \
                 '\n'.join(nameListOfOrigin).strip())
 
-                worksheet2.write(i+1, offsetWs2+6, \
-                '\n'.join(addedChildrenList[i]).strip())
-                if len(nameListOfChildren) > 20:
-                    nameListOfChildren = nameListOfChildren[:20]
-                worksheet2.write(i+1, offsetWs2+7, \
-                '\n'.join(nameListOfChildren).strip())
+                if len(nameListOfChildren) == 0:
+                    rowCount2 += 1
+                    continue
+
+                while len(nameListOfChildren) > 20:
+                    thisCellId = thisIdsOfChildren[:20]
+                    thisCellName = nameListOfChildren[:20]
+                    thisIdsOfChildren = thisIdsOfChildren[20:]
+                    nameListOfChildren = nameListOfChildren[20:]
+                    worksheet2.write(rowCount2, offsetWs2+6, \
+                    '\n'.join(thisCellId).strip())
+                    worksheet2.write(rowCount2, offsetWs2+7, \
+                    '\n'.join(thisCellName).strip())
+                    worksheet2.write(rowCount2, offsetWs2+8, thisRow[0])
+                    rowCount2 += 1
+
+                if len(nameListOfChildren) > 0:
+                    worksheet2.write(rowCount2, offsetWs2+6, \
+                    '\n'.join(thisIdsOfChildren).strip())
+                    worksheet2.write(rowCount2, offsetWs2+7, \
+                    '\n'.join(nameListOfChildren).strip())
+                    worksheet2.write(rowCount2, offsetWs2+8, thisRow[0])
+                    rowCount2 += 1
 
 
     workbook.save('results/Excel_test.xls')
