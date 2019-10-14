@@ -140,8 +140,14 @@ def saveResults(procedureIdListPure, willAddChildren):
     rowCount = 1
     rowCount2 = 1
     for i, idList in enumerate(procedureIdListPure):
-        if idList != []:
+        if idList == []:
 
+            thisRow = table1.row_values(5+i)
+            for j in range(10):
+                worksheet2.write(rowCount2, j, thisRow[j])
+            rowCount2 += 1
+
+        else:
             dupIdList = []
             for id in idList:
                 thisKey = (surgeonListEpic[i], locationListEpic[i], id)
