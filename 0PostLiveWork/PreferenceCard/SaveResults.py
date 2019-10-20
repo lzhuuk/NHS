@@ -97,6 +97,7 @@ def saveResults(procedureIdListPure, willAddChildren):
             thisAddedChildren = list(set(idList1).difference(set(idList2)))
             addedChildrenList.append(thisAddedChildren)
 
+
     #
     dict_Triple_cardId = {}
     for surgeon, location, idList, cardId \
@@ -229,6 +230,40 @@ def saveResults(procedureIdListPure, willAddChildren):
                     worksheet2.write(rowCount2, offsetWs2+8, thisRow[0])
                     rowCount2 += 1
 
+
+    procedureIdListOrigin = table1.col_values(8)[5:]
+    procedureIdListOrigin = [idEntryProc(item) for item in procedureIdListOrigin]
+
+    numChildrenAllAdded = sum([len(ids) for ids in addedChildrenList])
+
+    idsSetChildrenOnly = set()
+    for ids in addedChildrenList:
+        idsSetChildrenOnly.update(ids)
+
+    idsSetOrigin = set()
+    for ids in procedureIdListOrigin:
+        idsSetOrigin.update(ids)
+
+    idsSetAdd1 = set()
+    for ids in procedureIdListWithoutChildren:
+        idsSetAdd1.update(ids)
+
+    idsSetDiff1 = idsSetAdd1.difference(idsSetOrigin)
+
+    idsSetAdd2 = set()
+    for ids in procedureIdListPure:
+        idsSetAdd2.update(ids)
+
+    idsSetDiff2 = idsSetAdd2.difference(idsSetAdd1)
+
+    idsListORP = dict_ID_TERM.keys()
+    idsSetORP_remain = set(idsListORP).difference(idsSetDiff2)
+
+    print(numChildrenAllAdded,len(idsSetChildrenOnly))
+    print(len(idsSetOrigin),len(idsSetAdd1),len(idsSetDiff1),len(idsSetAdd2),len(idsSetDiff2))
+    print(len(idsListORP),len(idsSetORP_remain))
+
+    print(idsSetAdd2.difference(set(idsListORP)))
 
     workbook.save('results/Excel_test.xls')
 
@@ -382,6 +417,23 @@ def readORP():
                 sys.exit(0)
 
     return dict_ID_TERM
+
+
+def idEntryProc(item):
+    tempList = []
+    try:
+        theseId = item.split('\n')
+    except:
+        if type(item) == float:
+            tempList.append(str(item).replace('.0','').strip())
+        else:
+            sys.exit('ERROR: ' + str(item))
+    else:
+        for id in theseId:
+            if id.strip() != '':
+                tempList.append(id.strip())
+    return tempList
+
 
 if __name__ == '__main__':
     print('********** Scripts start. **********')
