@@ -1,0 +1,2 @@
+INSERT INTO sct_concept_tree
+VALUES (404684003),(243796009)

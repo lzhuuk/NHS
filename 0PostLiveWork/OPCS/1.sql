@@ -1,0 +1,1 @@
+LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\sct2_Description_Full-en_INT_20180731.txt' INTO TABLE sct_description

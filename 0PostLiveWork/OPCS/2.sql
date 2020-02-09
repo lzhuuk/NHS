@@ -1,0 +1,1 @@
+INSERT INTO sct_description SELECT * FROM sct_description_uk

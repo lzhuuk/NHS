@@ -1,0 +1,1 @@
+SELECT * FROM sct_description_uk WHERE ConceptId REGEXP '^((?!10000001).)*$' AND ActiveStatus = 1;
